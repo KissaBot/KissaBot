@@ -1,4 +1,4 @@
-use kissa::{EventType, KissaPlugin, TestEvent};
+use kissa::{EventType, KissaPlugin, KissaResult, KissaSender, TestEventType};
 #[derive(Default)]
 struct TestPlugin;
 
@@ -6,22 +6,36 @@ impl KissaPlugin for TestPlugin {
     fn name(&self) -> &'static str {
         "test_plugin"
     }
-    fn load(&mut self) -> Vec<kissa::EventType<'_>> {
-        vec![EventType::Unknown(
-            "hello".into(),
-            Box::into_raw(Box::new(TestEvent {
-                message: "hello world".to_string(),
-            })),
-        )]
+    fn load(&self, sender: KissaSender<EventType>) -> KissaResult<EventType> {
+        sender.send(EventType::Unknown(
+            "hello".to_string(),
+            Box::new(TestEventType::Message("world")),
+        ))?;
+        Ok(())
     }
-    fn on_event(&mut self, _: EventType<'_>) -> Vec<EventType<'_>> {
-        vec![]
+    fn on_event(&self, e: &EventType, sender: KissaSender<EventType>) -> KissaResult<EventType> {
+        match e {
+            EventType::Unknown(s, e) => {
+                println!("{}", s);
+                match e.downcast_ref::<TestEventType>() {
+                    Some(a) => {
+                        let TestEventType::Message(b) = a;
+                        println!("{}", b);
+                    }
+                    None => {
+                        println!("没有数据？")
+                    }
+                }
+            }
+            _ => {}
+        }
+
+        sender.send(EventType::QuitKissa(10))?;
+        Ok(())
     }
 }
 
 #[no_mangle]
-pub fn _create() -> *mut dyn KissaPlugin {
-    let object = TestPlugin::default();
-    let boxed: Box<dyn KissaPlugin> = Box::new(object);
-    Box::into_raw(boxed)
+fn _create() -> Box<dyn KissaPlugin> {
+    Box::new(TestPlugin::default())
 }

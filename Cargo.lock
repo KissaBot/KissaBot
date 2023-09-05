@@ -130,11 +130,15 @@ dependencies = [
 [[package]]
 name = "kissa"
 version = "0.1.0"
+dependencies = [
+ "crossbeam-channel",
+]
 
 [[package]]
 name = "kissabot"
 version = "0.1.0"
 dependencies = [
+ "crossbeam-channel",
  "dynamic_reload",
  "kissa",
 ]
