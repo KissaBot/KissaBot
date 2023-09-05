@@ -18,6 +18,7 @@ impl KissaPlugin for TestPlugin {
                     Some(a) => {
                         let TestEventType::Message(b) = a;
                         println!("{}", b);
+                        sender.send(EventType::QuitKissa(0))?;
                     }
                     None => {
                         println!("没有数据？")
@@ -26,8 +27,6 @@ impl KissaPlugin for TestPlugin {
             }
             _ => {}
         }
-
-        sender.send(EventType::QuitKissa(10))?;
         Ok(())
     }
 }
