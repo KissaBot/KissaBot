@@ -23,6 +23,9 @@ impl<T> KissaSender<T> {
     pub unsafe fn get_sender(&self) -> Sender<(u32, T)> {
         self.1.clone()
     }
+    pub unsafe fn get_id(&self) -> u32 {
+        self.0
+    }
 }
 
 pub trait KissaPlugin: Any + Send + Sync {

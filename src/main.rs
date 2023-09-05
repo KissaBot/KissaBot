@@ -19,6 +19,7 @@ fn main() {
     let plugin_list: Vec<String> = vec!["test_plugin".to_string()];
 
     let mut plugins: Plugins = Vec::new();
+    let mut id: u32 = 0;
     for plugin_name in plugin_list {
         match unsafe { reload_handler.add_library(&plugin_name, dynamic_reload::PlatformName::Yes) }
         {
@@ -28,7 +29,8 @@ fn main() {
                 match creator {
                     Ok(creator) => {
                         let plugin = creator();
-                        plugins.push(Arc::new(Mutex::new((3, plugin))));
+                        plugins.push(Arc::new(Mutex::new((id, plugin))));
+                        id += 1;
                     }
                     Err(e) => println!("Err {}", e.to_string()),
                 }
@@ -69,14 +71,14 @@ fn main() {
             let ms_ = ms.clone();
             let event_ = event.clone();
             let _ = thread::spawn(move || {
+                let event = event_.lock().unwrap();
                 let plugin = plugin_.lock().unwrap();
-                plugin
-                    .1
-                    .on_event(
-                        &event_.lock().unwrap().1,
-                        KissaSender::from_sender(plugin.0, ms_),
-                    )
-                    .unwrap();
+                if event.0 != plugin.0 {
+                    plugin
+                        .1
+                        .on_event(&event.1, KissaSender::from_sender(plugin.0, ms_))
+                        .unwrap();
+                }
             })
             .join();
         }
