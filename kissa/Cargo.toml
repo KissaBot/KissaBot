@@ -3,6 +3,7 @@ name = "kissa"
 version = "0.0.1"
 edition = "2021"
 description = "KissaBot is a chat bot written in Rust"
+license = "MIT"
 
 [dependencies]
 crossbeam-channel = "0.5.8"
