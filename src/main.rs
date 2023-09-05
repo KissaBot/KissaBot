@@ -1,25 +1,26 @@
 use crossbeam_channel::unbounded;
 use dynamic_reload::DynamicReload;
 use kissa::{EventType, KissaPlugin, KissaSender, PluginCreater};
+use std::any::Any;
 use std::process::exit;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 type Plugin = (u32, Box<dyn KissaPlugin>);
 type Plugins = Vec<Arc<Mutex<Plugin>>>;
-type JoinHandles<T> = Vec<thread::JoinHandle<T>>;
+type JoinHandleRts = Vec<Result<(), Box<(dyn Any + Send + 'static)>>>;
 fn main() {
     let mut reload_handler = DynamicReload::new(
-        Some(vec!["./test_plugin/target/debug", "./test_plugin_2/target/debug"]),
+        Some(vec![
+            "./test_plugin/target/debug",
+            "./test_plugin_2/target/debug",
+        ]),
         Some(&std::env::temp_dir().to_str().unwrap()),
         dynamic_reload::Search::Default,
         Duration::from_secs(2),
     );
 
-    let plugin_list: Vec<String> = vec![
-        "test_plugin".to_string(),
-        "test_plugin_2".to_string(),
-    ];
+    let plugin_list: Vec<String> = vec!["test_plugin".to_string(), "test_plugin_2".to_string()];
 
     let mut plugins: Plugins = Vec::new();
     let mut id: u32 = 0;
@@ -46,7 +47,7 @@ fn main() {
 
     let (ms, mr) = unbounded::<(u32, EventType)>();
 
-    let mut jhs: JoinHandles<_> = Vec::new();
+    let mut jhs: JoinHandleRts = Vec::new();
     for plugin in plugins.clone() {
         let plugin_ = plugin.clone();
         let ms_ = ms.clone();
@@ -57,9 +58,9 @@ fn main() {
                 .load(KissaSender::from_sender(plugin.0, ms_))
                 .unwrap();
         });
-        jhs.push(jh);
+        jhs.push(jh.join());
     }
-    join(jhs);
+    wait(jhs);
 
     loop {
         let event = Arc::new(Mutex::new(mr.recv().unwrap()));
@@ -87,8 +88,8 @@ fn main() {
         }
     }
 }
-fn join<T>(jhs: JoinHandles<T>) {
+fn wait(jhs: JoinHandleRts) {
     for jh in jhs {
-        jh.join().unwrap();
+        jh.unwrap();
     }
 }
