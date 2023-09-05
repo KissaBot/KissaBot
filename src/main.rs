@@ -10,13 +10,16 @@ type Plugins = Vec<Arc<Mutex<Plugin>>>;
 type JoinHandles<T> = Vec<thread::JoinHandle<T>>;
 fn main() {
     let mut reload_handler = DynamicReload::new(
-        Some(vec!["./test_plugin/target/debug"]),
+        Some(vec!["./test_plugin/target/release", "./test_plugin_2/target/release"]),
         Some(&std::env::temp_dir().to_str().unwrap()),
         dynamic_reload::Search::Default,
         Duration::from_secs(2),
     );
 
-    let plugin_list: Vec<String> = vec!["test_plugin".to_string()];
+    let plugin_list: Vec<String> = vec![
+        "test_plugin".to_string(),
+        "test_plugin_2".to_string(),
+    ];
 
     let mut plugins: Plugins = Vec::new();
     let mut id: u32 = 0;

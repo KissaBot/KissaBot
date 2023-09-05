@@ -1,9 +1,16 @@
 [package]
 name = "kissa"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 description = "KissaBot is a chat bot written in Rust"
 license = "MIT"
 
 [dependencies]
 crossbeam-channel = "0.5.8"
+
+[profile]
+dev.opt-level = 0
+test.opt-level = 0
+bench.opt-level = 0
+release.opt-level = 0
+dev.debug = true

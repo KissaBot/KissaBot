@@ -7,10 +7,7 @@ impl KissaPlugin for TestPlugin {
         "test_plugin"
     }
     fn load(&self, sender: KissaSender<EventType>) -> KissaResult<EventType> {
-        sender.send(EventType::Unknown(
-            "hello".to_string(),
-            Box::new(TestEventType::Message("world")),
-        ))?;
+        sender.send(EventType::Message("hello world".to_string()))?;
         Ok(())
     }
     fn on_event(&self, e: &EventType, sender: KissaSender<EventType>) -> KissaResult<EventType> {
