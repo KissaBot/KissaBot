@@ -1,7 +1,7 @@
 <div align="center" alt="kissabot">
   <h1>kissabot</h1>
 
-  <a href="https://github.com/kissabot/kissabot"><img src="https://github.com/kissabot/kissabot/assets/78293733/50e39a39-c649-424e-a226-3dd15965b627"></img></a>
+  <a href="https://github.com/kissabot/kissabot"><img src="https://github.com/kissabot/kissabot/assets/78293733/9cd13728-f956-4fdb-b511-4d7772142e9f"></img></a>
 
   <p>使用 Rust 开发的聊天机器人框架，基于 <a href="https://github.com/kokoro-rs/kokoro">kokoro</a>。</p>
 
