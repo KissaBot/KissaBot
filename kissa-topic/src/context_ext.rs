@@ -1,16 +1,12 @@
 use crate::avail::*;
-use crate::channel::Sender;
+use crate::context::Context;
+use crate::kissa::Kissa;
 use kokoro_neo::any::*;
 use std::sync::Arc;
 
-use kokoro_neo::result::Result;
-
-use crate::context::Context;
-
 pub trait ContextExt {
-    fn send<T: Send + Sync + 'static, N: Into<Arc<T>>>(&self, src: N) -> Result<()>;
     fn observe<
-        Param: Params<Sender, Arc<dyn KAny>> + 'static,
+        Param: Params<Kissa, Arc<dyn KAny>> + 'static,
         Func: FnMut<Param, Output = ()> + 'static,
         A: Into<Availed<Param, Func>>,
     >(
@@ -20,12 +16,8 @@ pub trait ContextExt {
 }
 
 impl ContextExt for Context {
-    fn send<T: Send + Sync + 'static, N: Into<Arc<T>>>(&self, src: N) -> Result<()> {
-        self.scope().send(src.into())?;
-        Ok(())
-    }
     fn observe<
-        Param: Params<Sender, Arc<dyn KAny>> + 'static,
+        Param: Params<Kissa, Arc<dyn KAny>> + 'static,
         Func: FnMut<Param, Output = ()> + 'static,
         A: Into<Availed<Param, Func>>,
     >(

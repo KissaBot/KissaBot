@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 flume = "0.11.0"
 kokoro-neo = { git = "https://github.com/kokoro-rs/kokoro.git", branch = "neo" }
+kissa-satori = { path = "../kissa-satori" }
+serde = { version = "1.0.201", features = ["derive"] }
