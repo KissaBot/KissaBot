@@ -1,0 +1,8 @@
+[package]
+name = "kissa-topic"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+flume = "0.11.0"
+kokoro-neo = { git = "https://github.com/kokoro-rs/kokoro.git", branch = "neo" }

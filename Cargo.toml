@@ -4,4 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-kokoro-neo = { git = "https://github.com/kokoro-rs/kokoro.git", branch = "neo" }
+ctrlc = "3.4.4"
+kissa-topic = { path = "kissa-topic" }
+
+[workspace]
+members = ["kissa-topic"]
