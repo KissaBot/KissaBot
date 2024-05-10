@@ -1,0 +1,7 @@
+[package]
+name = "kissabot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+kokoro-neo = { git = "https://github.com/kokoro-rs/kokoro.git", branch = "neo" }
