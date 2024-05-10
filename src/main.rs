@@ -16,8 +16,11 @@ fn main() -> Result<()> {
         }
     });
     let ctx_ = ctx.clone();
-    ctrlc::set_handler(move || ctx_.send(EOP).expect("Error: Can Not to Signal EOP"))?;
-    fs::create_dir("./plugins")?;
+    ctrlc::set_handler(move || {
+        println!("END");
+        ctx_.send(EOP).expect("Error: Can Not to Signal EOP");
+    })?;
+    fs::create_dir_all("./plugins")?;
     let plugins = fs::read_dir("./plugins")?;
     for plugin_path in plugins {
         let name = plugin_path?.file_name();
