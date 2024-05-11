@@ -1,6 +1,5 @@
-use kissa_topic::adapter::CreateAdapterFn;
 use kissa_topic::prelude::*;
-use libloading::{Library, Symbol};
+use libloading::Library;
 use std::fs;
 use std::path;
 use std::thread;
