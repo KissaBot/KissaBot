@@ -82,3 +82,18 @@ impl AdaptersExt for Adapters {
             .map(|v| Arc::clone(&*v) as Arc<dyn UserAPI>)
     }
 }
+
+/// 创建适配器
+pub type CreateAdapterFn = fn() -> Arc<dyn Adapter + Send + Sync + 'static>;
+
+/// 导出适配器
+#[macro_export]
+macro_rules! export_adapter {
+    ($adapter:expr) => {
+        #[no_mangle]
+        extern "Rust" fn __create_adapter__(
+        ) -> ::std::sync::Arc<dyn crate::adapter::Adapter + Send + Sync + 'static> {
+            ::std::sync::Arc::new($adapter)
+        }
+    };
+}

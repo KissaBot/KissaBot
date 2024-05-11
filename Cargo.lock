@@ -192,12 +192,13 @@ dependencies = [
  "ctrlc",
  "kissa-satori",
  "kissa-topic",
+ "libloading",
 ]
 
 [[package]]
 name = "kokoro-neo"
 version = "0.0.6"
-source = "git+https://github.com/kokoro-rs/kokoro.git?branch=neo#79e28af7c179a8da658dbfc7407437d98657ec91"
+source = "git+https://github.com/kokoro-rs/kokoro.git?branch=neo#043e743e84a544318b9a7c4d1889c284fd3f00bf"
 dependencies = [
  "anyhow",
  "const-fnv1a-hash",
@@ -422,9 +423,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.61"
+version = "2.0.62"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c993ed8ccba56ae856363b1845da7266a7cb78e1d146c8a32d54b45a8b831fc9"
+checksum = "9f660c3bfcefb88c538776b6685a0c472e3128b51e74d48793dc2a488196e8eb"
 dependencies = [
  "proc-macro2",
  "quote",
