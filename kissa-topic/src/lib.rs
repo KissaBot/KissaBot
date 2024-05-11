@@ -1,28 +1,39 @@
-#![feature(unboxed_closures)]
+#![feature(unboxed_closures, trait_upcasting)]
+#![warn(missing_docs)]
+#![doc = "该包是 kissabot 的基础包。"]
 
+/// kokoro 是一个元框架，它是 kissabot 的基础
 pub use kokoro_neo as kokoro;
 
+/// 上下文概念来自于 kokoro
 pub mod context {
     use crate::kissa::Kissa;
     use std::sync::Arc;
+    /// kissabot 所使用的上下文类型
     pub type Context = kokoro_neo::context::Context<Kissa, Arc<dyn kokoro_neo::any::KAny>>;
     pub use kokoro_neo::context::{ChildHandle, Children, RawContext, RawContextExt};
 }
 
+/// 事件通道
 pub mod channel {
     pub use flume::*;
     use kokoro_neo::any::KAny;
     use std::sync::Arc;
+    /// kissabot 的发送者
     pub type Sender = flume::Sender<Arc<dyn KAny>>;
+    /// kissabot 的接收者
     pub type Receiver = flume::Receiver<Arc<dyn KAny>>;
 }
 
+/// 可用性概念来自于 kokoro
 pub mod avail {
     use kokoro_neo::any::KAny;
     use std::sync::Arc;
 
+    /// kissabot 的可用例
     pub type Availed<Param, Func> =
         kokoro_neo::avail::Availed<crate::kissa::Kissa, Param, Func, Arc<dyn KAny>>;
+    /// kissabot 的可用例句柄
     pub type AvailHandle<Param, Func> =
         kokoro_neo::avail::AvailHandle<crate::kissa::Kissa, Param, Func, Arc<dyn KAny>>;
     pub use kokoro_neo::avail::Avail;
@@ -30,10 +41,14 @@ pub mod avail {
     pub use kokoro_neo::avail::Params;
 }
 
+/// kissabot 的适配器
 pub mod adapter;
+/// 对 kokoro 上下文的扩展
 pub mod context_ext;
+/// kissabot 的主结构体
 pub mod kissa;
 
+/// 主要模块
 pub mod prelude {
     pub use crate::avail::*;
     pub use crate::channel;
