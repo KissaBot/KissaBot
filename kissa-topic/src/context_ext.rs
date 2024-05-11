@@ -1,29 +1,30 @@
 use crate::avail::*;
 use crate::context::Context;
-use crate::kissa::Kissa;
 use kokoro_neo::any::*;
 use std::sync::Arc;
 
-pub trait ContextExt {
+/// 扩展上下文的方法
+pub trait ContextExt<T: Send + Sync> {
+    /// 新增一个观察者，当有事件就会被触发
     fn observe<
-        Param: Params<Kissa, Arc<dyn KAny>> + 'static,
+        Param: Params<T, Arc<dyn KAny>> + 'static,
         Func: FnMut<Param, Output = ()> + 'static,
-        A: Into<Availed<Param, Func>>,
+        A: Into<Availed<T, Param, Func>>,
     >(
         &self,
         f: A,
-    ) -> AvailHandle<Param, Func>;
+    ) -> AvailHandle<T, Param, Func>;
 }
 
-impl ContextExt for Context {
+impl<T: Send + Sync> ContextExt<T> for Context<T> {
     fn observe<
-        Param: Params<Kissa, Arc<dyn KAny>> + 'static,
+        Param: Params<T, Arc<dyn KAny>> + 'static,
         Func: FnMut<Param, Output = ()> + 'static,
-        A: Into<Availed<Param, Func>>,
+        A: Into<Availed<T, Param, Func>>,
     >(
         &self,
         f: A,
-    ) -> AvailHandle<Param, Func> {
+    ) -> AvailHandle<T, Param, Func> {
         self.avails().add(f)
     }
 }

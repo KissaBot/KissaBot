@@ -85,15 +85,21 @@ pub struct GuildRole {
 }
 
 // ===Interaction===
-/// 交互
+/// 指令
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct Interaction {
+pub struct Argv {
     /// 指令名称
     pub name: String,
     /// 参数
     pub arguments: Vec<Value>,
     /// 选项
     pub options: Value,
+}
+/// 按钮
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct Button {
+    /// 按钮ID
+    pub id: String,
 }
 
 // ===Login===

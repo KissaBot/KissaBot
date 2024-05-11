@@ -158,6 +158,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "kissa-plugin-example"
+version = "0.1.0"
+dependencies = [
+ "kissabot",
+]
+
+[[package]]
 name = "kissa-satori"
 version = "0.1.0"
 dependencies = [
@@ -170,9 +177,11 @@ dependencies = [
 name = "kissa-topic"
 version = "0.1.0"
 dependencies = [
+ "dashmap",
  "flume",
  "kissa-satori",
  "kokoro-neo",
+ "rayon",
  "serde",
 ]
 
@@ -181,6 +190,7 @@ name = "kissabot"
 version = "0.1.0"
 dependencies = [
  "ctrlc",
+ "kissa-satori",
  "kissa-topic",
 ]
 

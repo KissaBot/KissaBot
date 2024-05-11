@@ -10,7 +10,9 @@ pub mod context {
     use crate::kissa::Kissa;
     use std::sync::Arc;
     /// kissabot 所使用的上下文类型
-    pub type Context = kokoro_neo::context::Context<Kissa, Arc<dyn kokoro_neo::any::KAny>>;
+    pub type DefaultContext = kokoro_neo::context::Context<Kissa, Arc<dyn kokoro_neo::any::KAny>>;
+    /// 携带类型的上下文
+    pub type Context<T> = kokoro_neo::context::Context<T, Arc<dyn kokoro_neo::any::KAny>>;
     pub use kokoro_neo::context::{ChildHandle, Children, RawContext, RawContextExt};
 }
 
@@ -30,12 +32,13 @@ pub mod avail {
     use kokoro_neo::any::KAny;
     use std::sync::Arc;
 
+    /// 事件基本类型
+    pub type Event = Arc<dyn KAny>;
     /// kissabot 的可用例
-    pub type Availed<Param, Func> =
-        kokoro_neo::avail::Availed<crate::kissa::Kissa, Param, Func, Arc<dyn KAny>>;
+    pub type Availed<T, Param, Func> = kokoro_neo::avail::Availed<T, Param, Func, Arc<dyn KAny>>;
     /// kissabot 的可用例句柄
-    pub type AvailHandle<Param, Func> =
-        kokoro_neo::avail::AvailHandle<crate::kissa::Kissa, Param, Func, Arc<dyn KAny>>;
+    pub type AvailHandle<T, Param, Func> =
+        kokoro_neo::avail::AvailHandle<T, Param, Func, Arc<dyn KAny>>;
     pub use kokoro_neo::avail::Avail;
     pub use kokoro_neo::avail::Avails;
     pub use kokoro_neo::avail::Params;

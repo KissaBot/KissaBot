@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 ctrlc = "3.4.4"
 kissa-topic = { path = "kissa-topic" }
+kissa-satori = { path = "kissa-satori" }
 
 [workspace]
-members = ["kissa-satori", "kissa-topic"]
+members = [ "examples/kissa-plugin-example","kissa-satori", "kissa-topic"]

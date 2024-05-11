@@ -1,14 +1,14 @@
-use std::ops::Deref;
 use std::sync::Arc;
 
 use dashmap::DashMap;
 use kissa_satori::api::*;
-use kissa_satori::resources::*;
 use kokoro_neo::result::anyhow;
 use kokoro_neo::result::Result;
 
+/// 多适配器
 pub type Adapters = DashMap<u64, Arc<dyn Adapter + Send + Sync + 'static>>;
 
+/// 适配器需要实现的 trait
 pub trait Adapter:
     ChannelAPI
     + GuildAPI
@@ -20,14 +20,24 @@ pub trait Adapter:
     + UserAPI
 {
 }
+
+/// 对多适配的扩展方法
 pub trait AdaptersExt {
+    /// 获取一个适配器的频道API
     fn channel(&self, adapter_id: &u64) -> Result<Arc<dyn ChannelAPI>>;
+    /// 获取一个适配器的群组API
     fn guild(&self, adapter_id: &u64) -> Result<Arc<dyn GuildAPI>>;
+    /// 获取一个适配器的群组成员API
     fn guild_member(&self, adapter_id: &u64) -> Result<Arc<dyn GuildMemberAPI>>;
+    /// 获取一个适配器的群组角色API
     fn guild_role(&self, adapter_id: &u64) -> Result<Arc<dyn GuildRoleAPI>>;
+    /// 获取一个适配器的登录信息API
     fn login(&self, adapter_id: &u64) -> Result<Arc<dyn LoginAPI>>;
+    /// 获取一个适配器的消息API
     fn message(&self, adapter_id: &u64) -> Result<Arc<dyn MessageAPI>>;
+    /// 获取一个适配器的表态API
     fn reaction(&self, adapter_id: &u64) -> Result<Arc<dyn ReactionAPI>>;
+    /// 获取一个适配器的用户API
     fn user(&self, adapter_id: &u64) -> Result<Arc<dyn UserAPI>>;
 }
 impl AdaptersExt for Adapters {
