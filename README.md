@@ -3,7 +3,7 @@
 
   <a href="https://github.com/kissabot/kissabot"><img src="https://github.com/kissabot/kissabot/assets/78293733/9cd13728-f956-4fdb-b511-4d7772142e9f"></img></a>
 
-  <p>使用 Rust 开发的聊天机器人框架，基于 <a href="https://github.com/kokoro-rs/kokoro">kokoro</a>。</p>
+  <p>使用 Rust 开发的聊天机器人框架，基于 <a href="https://github.com/kokoro-rs/kokoro">kokoro</a> & <a href="https://satori.js.org/zh-CN/">satori</a>。</p>
 
   <p>就像这篇自述一样，kissabot 是一个简单又简陋的机器人框架，它的源码不超过 300 行。</p>
 
