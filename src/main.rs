@@ -5,7 +5,7 @@ use std::thread;
 struct EOP;
 fn main() -> Result<()> {
     let (tx, rx) = channel::unbounded();
-    let ctx = Context::new(tx);
+    let ctx = Context::new(Kissa::new(tx));
     let ctx_ = ctx.clone();
     let handle = thread::spawn(move || {
         for event in rx {
