@@ -17,3 +17,13 @@
 
   <p>祝你成功，也希望你喜欢 kissabot，谢谢！</p>
 </div>
+
+## Star History
+
+<a href="https://star-history.com/#kissabot/kissabot&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=kissabot/kissabot&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=kissabot/kissabot&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kissabot/kissabot&type=Timeline" />
+ </picture>
+</a>
