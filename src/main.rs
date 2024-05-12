@@ -1,5 +1,6 @@
 #![feature(try_blocks)]
 use kissa_topic::prelude::*;
+use kissa_topic::setup_logger;
 use libloading::Library;
 use std::fs;
 use std::path;
@@ -35,6 +36,7 @@ fn main() -> Result<()> {
         let path = path.join(name);
         let result: Result<()> = try {
             let lib = unsafe { Library::new(&path) }?;
+            setup_logger(&lib)?;
             ctx.dyn_plug(lib)?;
         };
         match result {

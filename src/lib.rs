@@ -1,5 +1,6 @@
 pub use kissa_topic as topic;
 mod event_ext;
+mod resources_ext;
 pub mod event {
     pub use crate::event_ext::*;
     pub use kissa_satori::event::SatoriEvent as SEventContent;

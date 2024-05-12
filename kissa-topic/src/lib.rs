@@ -57,6 +57,7 @@ pub mod kissa;
 
 /// 主要模块
 pub mod prelude {
+    pub use crate::adapter::*;
     pub use crate::avail::*;
     pub use crate::channel;
     pub use crate::context::*;
@@ -70,11 +71,48 @@ pub mod prelude {
     pub use log::{debug, error, info, trace, warn};
 }
 
-pub use kokoro_neo::export_plugin as export_plugin_;
+/// 订阅常规事件
 #[macro_export]
+macro_rules! subscribe {
+    ($ctx:expr,$event:ty,$subscriber:expr) => {
+        $crate::context_ext::ContextExt::observe(
+            &$ctx,
+            |ctx: $crate::context::Context<_>, event: $crate::avail::Event| {
+                if let Some(se) = <dyn $crate::kokoro::any::KAny>::downcast_ref::<$event>(&event) {
+                    $subscriber(ctx, se);
+                }
+            },
+        );
+    };
+}
+
+pub use kokoro_neo::export_plugin as export_plugin_;
 /// 导出插件
+#[macro_export]
 macro_rules! export_plugin {
     ($plugin_type:ty,$plugin:expr) => {
         $crate::export_plugin_!($plugin_type, $plugin);
+        #[no_mangle]
+        pub extern "Rust" fn __setup_logger__(
+            logger: &'static dyn $crate::log::Log,
+            level: $crate::log::LevelFilter,
+        ) -> $crate::kokoro::result::Result<()> {
+            $crate::log::set_max_level(level);
+            $crate::log::set_logger(logger)?;
+            Ok(())
+        }
     };
+}
+
+use crate::kokoro::result::Result;
+/// 用于初始化动态链接库的 logger 的函数
+pub type SetupLoggerFn =
+    extern "Rust" fn(logger: &'static dyn log::Log, level: log::LevelFilter) -> Result<()>;
+
+use kokoro::plugin::dynamic::{Library, Symbol};
+/// 初始化动态链接库的 logger
+pub fn setup_logger(lib: &Library) -> Result<()> {
+    let setup: Symbol<SetupLoggerFn> = unsafe { lib.get(b"__setup_logger__") }?;
+    setup(log::logger(), log::max_level())?;
+    Ok(())
 }

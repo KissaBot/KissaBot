@@ -158,7 +158,7 @@ pub struct Message {
     pub id: String,
     /// 消息内容
     pub content: String,
-    /// 消息对象
+    /// 频道对象
     pub channel: Option<Channel>,
     /// 群组对象
     pub guild: Option<Guild>,

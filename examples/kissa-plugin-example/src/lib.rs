@@ -1,4 +1,7 @@
-use kissabot::{event::*, topic::prelude::*};
+use kissabot::{
+    event::*,
+    topic::{prelude::*, subscribe},
+};
 
 struct MyPlugin;
 impl Plugin for MyPlugin {
@@ -6,27 +9,21 @@ impl Plugin for MyPlugin {
     type Pars = Event;
     fn load(ctx: Context<Self>) -> Result<()> {
         info!("来自插件的日志");
-        ctx.observe(repetition);
+        subscribe!(ctx, SEvent, subscriber);
         Ok(())
     }
 }
 
-fn repetition(ctx: Context<MyPlugin>, event: Event) {
-    let se;
-    if let Some(se_) = event.downcast_ref::<SEvent>() {
-        se = se_;
-    } else {
-        return;
-    }
+fn subscriber(ctx: Context<MyPlugin>, event: &SEvent) {
     if let SEventContent {
         ty: SEventType::MessageCreated,
         message: Some(message_),
         ..
-    } = &se.content
+    } = &event.content
     {
         let message = message_.content.clone();
-        if let Err(err) = se.reply(&ctx, message) {
-            println!("Error: {}", err);
+        if let Err(err) = event.reply(&ctx, message) {
+            error!("发送消息失败: {}", err);
         }
     }
 }
