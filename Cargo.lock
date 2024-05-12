@@ -320,7 +320,7 @@ dependencies = [
 [[package]]
 name = "kokoro-neo"
 version = "0.0.6"
-source = "git+https://github.com/kokoro-rs/kokoro.git?branch=neo#5a30e7e1db1fcf7f59cc004448d69a87fc2ce75a"
+source = "git+https://github.com/kokoro-rs/kokoro.git?branch=neo#44b571906f6245012d796e45247f34cbd7932dac"
 dependencies = [
  "anyhow",
  "const-fnv1a-hash",

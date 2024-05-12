@@ -1,5 +1,6 @@
 use kissabot::{
     event::*,
+    topic::kokoro::result,
     topic::{prelude::*, subscribe},
 };
 
@@ -28,4 +29,4 @@ fn subscriber(ctx: Context<MyPlugin>, event: &SEvent) {
     }
 }
 
-export_plugin!(MyPlugin, MyPlugin);
+export_plugin!(MyPlugin, result::Ok(MyPlugin));
