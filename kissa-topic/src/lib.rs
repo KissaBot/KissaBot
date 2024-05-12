@@ -78,7 +78,9 @@ macro_rules! subscribe {
         $crate::context_ext::ContextExt::observe(
             &$ctx,
             |ctx: $crate::context::Context<_>, event: $crate::avail::Event| {
-                if let Some(se) = <dyn $crate::kokoro::any::KAny>::downcast_ref::<$event>(&event) {
+                if let Some(se) =
+                    <dyn $crate::kokoro::any::KAny>::downcast_ref::<$event>(event.as_ref())
+                {
                     $subscriber(ctx, se);
                 }
             },

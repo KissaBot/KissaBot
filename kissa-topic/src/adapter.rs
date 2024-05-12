@@ -44,42 +44,42 @@ pub trait AdaptersExt {
 impl AdaptersExt for Adapters {
     fn channel(&self, adapter_id: &u64) -> Result<Arc<dyn ChannelAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn ChannelAPI>)
     }
     fn guild(&self, adapter_id: &u64) -> Result<Arc<dyn GuildAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn GuildAPI>)
     }
     fn guild_member(&self, adapter_id: &u64) -> Result<Arc<dyn GuildMemberAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn GuildMemberAPI>)
     }
     fn guild_role(&self, adapter_id: &u64) -> Result<Arc<dyn GuildRoleAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn GuildRoleAPI>)
     }
     fn login(&self, adapter_id: &u64) -> Result<Arc<dyn LoginAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn LoginAPI>)
     }
     fn message(&self, adapter_id: &u64) -> Result<Arc<dyn MessageAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn MessageAPI>)
     }
     fn reaction(&self, adapter_id: &u64) -> Result<Arc<dyn ReactionAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn ReactionAPI>)
     }
     fn user(&self, adapter_id: &u64) -> Result<Arc<dyn UserAPI>> {
         self.get(adapter_id)
-            .ok_or(anyhow!("Adapter Not Exist"))
+            .ok_or(anyhow!("适配器 {} 不存在", adapter_id))
             .map(|v| Arc::clone(&*v) as Arc<dyn UserAPI>)
     }
 }

@@ -3,7 +3,7 @@ use crate::channel::Sender;
 use kokoro_neo::result::Result;
 use std::sync::Arc;
 
-/// kissabot 的主结构体，上下文中的 scope
+/// kissabot 的主结构体，上下文中的 global
 #[derive(Clone)]
 pub struct Kissa {
     sender: Sender,

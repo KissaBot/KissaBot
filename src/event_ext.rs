@@ -10,7 +10,7 @@ impl SEventExt for SEvent {
             self.content
                 .channel
                 .clone()
-                .ok_or(anyhow!("Resource Channel Not Exist"))?
+                .ok_or(anyhow!("频道资源不存在"))?
                 .id,
             message,
         )?;
