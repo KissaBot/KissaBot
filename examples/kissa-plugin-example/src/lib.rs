@@ -1,9 +1,11 @@
 use kissabot::{event::*, topic::prelude::*};
 
 struct MyPlugin;
-impl Plugin<Event> for MyPlugin {
+impl Plugin for MyPlugin {
+    type Global = Kissa;
+    type Pars = Event;
     fn load(ctx: Context<Self>) -> Result<()> {
-        println!("Info: {}", "你好世界");
+        info!("来自插件的日志");
         ctx.observe(repetition);
         Ok(())
     }
@@ -23,10 +25,10 @@ fn repetition(ctx: Context<MyPlugin>, event: Event) {
     } = &se.content
     {
         let message = message_.content.clone();
-        if let Err(err) = se.try_reply(&ctx, message) {
+        if let Err(err) = se.reply(&ctx, message) {
             println!("Error: {}", err);
         }
     }
 }
 
-export_plugin!(MyPlugin, MyPlugin, Event);
+export_plugin!(MyPlugin, MyPlugin);

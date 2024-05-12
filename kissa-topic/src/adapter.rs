@@ -1,10 +1,8 @@
 use std::sync::Arc;
 
 use crate::context::Context;
-use crate::kissa::Kissa;
 use dashmap::DashMap;
 use kissa_satori::api::*;
-use kokoro_neo::context::RawContextExt;
 use kokoro_neo::result::anyhow;
 use kokoro_neo::result::Result;
 
@@ -90,13 +88,8 @@ impl AdaptersExt for Adapters {
 pub fn add_adapter<T: Send + Sync, A: Adapter + Send + Sync + 'static>(
     ctx: &Context<T>,
     adapter: A,
-) -> Result<u64> {
-    if let Some(parent) = ctx.raw().parent.upgrade() {
-        let parent = unsafe { parent.downcast_unchecked::<Kissa>(None, None) };
-        let id = &adapter as *const _ as u64;
-        parent.adapters.insert(id, Arc::new(adapter));
-        Ok(id)
-    } else {
-        Err(anyhow!("Can Not Add Adapter"))
-    }
+) -> u64 {
+    let id = &adapter as *const _ as u64;
+    ctx.global.adapters.insert(id, Arc::new(adapter));
+    id
 }
