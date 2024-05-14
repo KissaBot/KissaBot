@@ -7,13 +7,17 @@ pub use kokoro_neo as kokoro;
 
 pub use log;
 
+pub use mlua as lua;
+
 /// 上下文概念来自于 kokoro
 pub mod context {
     use crate::kissa::Kissa;
     use std::sync::Arc;
     /// 携带类型的上下文
     pub type Context<T> = kokoro_neo::context::Context<T, Arc<dyn kokoro_neo::any::KAny>, Kissa>;
-    pub use kokoro_neo::context::{ChildHandle, Children, RawContext, RawContextExt};
+    /// 抹去类型的上下文
+    pub type RawContext = kokoro_neo::context::RawContext<Arc<dyn kokoro_neo::any::KAny>, Kissa>;
+    pub use kokoro_neo::context::{ChildHandle, Children, RawContextExt};
 }
 
 /// 事件通道
@@ -54,6 +58,8 @@ pub mod adapter;
 pub mod context_ext;
 /// kissabot 的主结构体
 pub mod kissa;
+/// kissabot plugin
+pub mod plugin;
 
 /// 主要模块
 pub mod prelude {
@@ -64,9 +70,11 @@ pub mod prelude {
     pub use crate::context_ext::*;
     pub use crate::export_plugin;
     pub use crate::kissa::*;
+    pub use crate::plugin::*;
     pub use kokoro_neo::any::*;
-    pub use kokoro_neo::plugin::dynamic::*;
-    pub use kokoro_neo::plugin::*;
+    pub use kokoro_neo::plugin::dynamic::{
+        changelog, library_filename, os, Error, Library, Symbol,
+    };
     pub use kokoro_neo::result::Result;
     pub use log::{debug, error, info, trace, warn};
 }
@@ -88,12 +96,10 @@ macro_rules! subscribe {
     };
 }
 
-pub use kokoro_neo::export_plugin as export_plugin_;
 /// 导出插件
 #[macro_export]
 macro_rules! export_plugin {
-    ($plugin_type:ty,$plugin:expr) => {
-        $crate::export_plugin_!($plugin_type, $plugin);
+    ($plugin_type:ty) => {
         #[no_mangle]
         pub extern "Rust" fn __setup_logger__(
             logger: &'static dyn $crate::log::Log,
@@ -103,18 +109,28 @@ macro_rules! export_plugin {
             $crate::log::set_logger(logger)?;
             Ok(())
         }
+        #[no_mangle]
+        extern "Rust" fn __load__(
+            ctx: ::std::sync::Arc<$crate::context::RawContext>,
+            global: $crate::kissa::Kissa,
+        ) -> $crate::kokoro::result::Result<()> {
+            let ctx = unsafe {
+                $crate::context::RawContextExt::downcast_unchecked::<$plugin_type>(
+                    ctx, None, global,
+                )
+            };
+            <$plugin_type as $crate::plugin::Plugin>::load(ctx)?;
+            Ok(())
+        }
+        #[no_mangle]
+        extern "Rust" fn __create__(
+            lua: &$crate::lua::Lua,
+            value: $crate::lua::Value,
+        ) -> $crate::kokoro::result::Result<::std::sync::Arc<dyn $crate::kokoro::any::KAny>> {
+            let config: <$plugin_type as $crate::plugin::Plugin>::Config =
+                $crate::lua::LuaSerdeExt::from_value(lua, value)?;
+            let plugin = <$plugin_type as $crate::plugin::Plugin>::create(config)?;
+            Ok(::std::sync::Arc::new(plugin))
+        }
     };
-}
-
-use crate::kokoro::result::Result;
-/// 用于初始化动态链接库的 logger 的函数
-pub type SetupLoggerFn =
-    extern "Rust" fn(logger: &'static dyn log::Log, level: log::LevelFilter) -> Result<()>;
-
-use kokoro::plugin::dynamic::{Library, Symbol};
-/// 初始化动态链接库的 logger
-pub fn setup_logger(lib: &Library) -> Result<()> {
-    let setup: Symbol<SetupLoggerFn> = unsafe { lib.get(b"__setup_logger__") }?;
-    setup(log::logger(), log::max_level())?;
-    Ok(())
 }

@@ -1,13 +1,16 @@
 use kissabot::{
     event::*,
-    topic::kokoro::result,
     topic::{prelude::*, subscribe},
 };
+use serde::Deserialize;
+#[derive(Deserialize)]
+struct MyConfig {
+    foo: String,
+}
 
 struct MyPlugin;
 impl Plugin for MyPlugin {
-    type Global = Kissa;
-    type Pars = Event;
+    type Config = MyConfig;
     fn load(ctx: Context<Self>) -> Result<()> {
         info!("来自插件的日志");
         subscribe!(ctx, SEvent, subscriber);
@@ -15,6 +18,10 @@ impl Plugin for MyPlugin {
             info!("观察者被触发");
         });
         Ok(())
+    }
+    fn create(config: Self::Config) -> Result<Self> {
+        info!("配置 foo: {}", config.foo);
+        Ok(MyPlugin)
     }
 }
 
@@ -34,4 +41,4 @@ fn subscriber(ctx: Context<MyPlugin>, event: &SEvent) {
     }
 }
 
-export_plugin!(MyPlugin, result::Ok(MyPlugin));
+export_plugin!(MyPlugin);

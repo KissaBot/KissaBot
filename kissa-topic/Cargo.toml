@@ -11,3 +11,9 @@ serde = { version = "1.0.201", features = ["derive"] }
 dashmap = { version = "5.5.3", features = ["rayon"] }
 rayon = "1.10.0"
 log = "0.4.21"
+mlua = { version = "0.9.7", features = [
+  "lua54",
+  "send",
+  "serialize",
+  "vendored",
+] }
