@@ -36,11 +36,13 @@ fn main() -> Result<()> {
         let path = path.join(param);
         let ctx__ = ctx_.clone();
         let func = lua.create_function(move |lua, param: LuaValue| {
-            let lib = unsafe { Library::new(&path) }
-                .map_err(|err| LuaError::RuntimeError(err.to_string()))?;
-            ctx__
-                .dyn_plug(lib, &lua, param)
-                .map_err(|err| LuaError::RuntimeError(err.to_string()))?;
+            let result: Result<()> = try {
+                let lib = unsafe { Library::new(&path) }?;
+                ctx__.dyn_plug(lib, &lua, param)?;
+            };
+            if let Err(err) = result {
+                error!("加载插件失败: Path: {:#?}, Err: {}", path.to_str(), err);
+            }
             Ok(())
         });
         Ok(func)
