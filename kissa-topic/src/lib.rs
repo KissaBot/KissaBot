@@ -104,10 +104,9 @@ macro_rules! export_plugin {
         pub extern "Rust" fn __setup_logger__(
             logger: &'static dyn $crate::log::Log,
             level: $crate::log::LevelFilter,
-        ) -> $crate::kokoro::result::Result<()> {
+        ) {
             $crate::log::set_max_level(level);
-            $crate::log::set_logger(logger)?;
-            Ok(())
+            let _ = $crate::log::set_logger(logger);
         }
         #[no_mangle]
         extern "Rust" fn __load__(
@@ -126,10 +125,13 @@ macro_rules! export_plugin {
         extern "Rust" fn __create__(
             lua: &$crate::lua::Lua,
             value: $crate::lua::Value,
-        ) -> $crate::kokoro::result::Result<::std::sync::Arc<dyn $crate::kokoro::any::KAny>> {
+        ) -> $crate::kokoro::result::Result<::std::sync::Arc<dyn $crate::kokoro::any::KAny>, String>
+        {
             let config: <$plugin_type as $crate::plugin::Plugin>::Config =
-                $crate::lua::LuaSerdeExt::from_value(lua, value)?;
-            let plugin = <$plugin_type as $crate::plugin::Plugin>::create(config)?;
+                $crate::lua::LuaSerdeExt::from_value(lua, value)
+                    .map_err(|err| format!("配置序列化错误: {}", err))?;
+            let plugin = <$plugin_type as $crate::plugin::Plugin>::create(config)
+                .map_err(|err| format!("插件实例创建失败: {}", err))?;
             Ok(::std::sync::Arc::new(plugin))
         }
     };
