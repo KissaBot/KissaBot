@@ -4,7 +4,6 @@ use kissa_topic::lua::Variadic;
 use kissa_topic::prelude::*;
 use std::fs;
 use std::path;
-use std::sync::Arc;
 use std::thread;
 
 struct EOP;

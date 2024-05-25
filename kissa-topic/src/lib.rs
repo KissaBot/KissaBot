@@ -61,6 +61,10 @@ pub mod kissa;
 /// kissabot plugin
 pub mod plugin;
 
+pub mod message;
+
+pub mod event;
+
 /// 主要模块
 pub mod prelude {
     pub use crate::adapter::*;

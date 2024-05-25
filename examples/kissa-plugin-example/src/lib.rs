@@ -6,6 +6,7 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 struct MyConfig {
     foo: String,
+    bar: u32,
 }
 
 struct MyPlugin;
@@ -21,6 +22,7 @@ impl Plugin for MyPlugin {
     }
     fn create(config: Self::Config) -> Result<Self> {
         info!("配置 foo: {}", config.foo);
+        info!("配置 u32: {}", config.bar);
         Ok(MyPlugin)
     }
 }
