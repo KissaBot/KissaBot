@@ -5,7 +5,7 @@
 
   <p>使用 Rust 开发的聊天机器人框架，基于 <a href="https://github.com/kokoro-rs/kokoro">kokoro</a> & <a href="https://satori.js.org/zh-CN/">satori</a>。</p>
 
-  <p>就像这篇自述一样，kissabot 是一个简单又简陋的聊天机器人框架，它的源码不超过 3000 行。</p>
+  <p>就像这篇自述一样，kissabot 是一个简单又简陋的聊天机器人框架，它的源码不超过 1000 行。</p>
 
   <p>有些时候就要保持愚蠢并简单，框架就只做它该做的事。</p>
 
